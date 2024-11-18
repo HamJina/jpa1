@@ -34,6 +34,7 @@ public class Order {
     private OrderStatus status;
 
     //==연관관계 메서드==//
+
     public void setMember(Member member) {
         this.member = member;
         member.getOrders().add(this);
