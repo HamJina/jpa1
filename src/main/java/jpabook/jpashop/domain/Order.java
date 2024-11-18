@@ -49,4 +49,46 @@ public class Order {
         this.delivery = delivery;
         delivery.setOrder(this);
     }
+
+    //==생성 메서드==//
+    //복잡한 생성은 별도의 메서드가 있는 것이 좋다.
+    /* 상품 주문 */
+    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        order.setStatus(OrderStatus.ORDER);
+        order.setOrderDate(LocalDateTime.now());
+        return order;
+    }
+
+    //==비즈니스 로직==//
+    /* 주문 취소 */
+    public void cancel() {
+
+        //이미 배송이 완료되면 취소 불가
+        if (delivery.getStatus() == DeliveryStatus.COMP) {
+            throw  new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
+        }
+
+        //취소 가능 상태면 주문상태를 취소로 변경
+        this.setStatus(OrderStatus.CANCEL);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancel();
+        }
+    }
+
+    //==조회 로직==//
+    /* 전체 주문 가격 조회 */
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
+    }
+
 }
