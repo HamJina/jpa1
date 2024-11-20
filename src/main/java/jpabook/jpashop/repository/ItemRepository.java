@@ -18,7 +18,7 @@ public class ItemRepository {
         if (item.getId() == null) {
             em.persist(item); //item을 처음 저장할때는 id값 없을 것임(완전히 새로 생성한 객체)
         } else {
-            em.merge(item); //나중에 다시 설명
+            em.merge(item); // 이미 존재하는 id -> 상품을 수정하는 경우
         }
     }
 
